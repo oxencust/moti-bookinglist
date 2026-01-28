@@ -397,19 +397,37 @@
             flex: 1;
         }
         
+        .search-row-inline {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .search-row-inline .form-input {
+            flex: 1;
+            min-width: 0;
+        }
+        
         .btn-search {
-            padding: 12px 20px;
+            padding: 12px 14px;
             background: var(--green);
             color: var(--white);
-            border: none;
+            border: 2px solid var(--green);
             border-radius: 10px;
             cursor: pointer;
             font-size: 1rem;
             transition: all 0.2s;
+            flex-shrink: 0;
+            width: 46px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .btn-search:hover {
             background: var(--green-dark);
+            border-color: var(--green-dark);
         }
         
         .search-results {
@@ -483,27 +501,18 @@
             </div>
             
             <div class="form-group">
-                <label class="form-label">搜尋學員（輸入姓名或電話）</label>
-                <div class="search-row">
-                    <input type="text" class="form-input" id="searchKeyword" placeholder="輸入姓名或電話搜尋...">
+                <label class="form-label">搜尋學員<span class="required">*</span></label>
+                <div class="search-row-inline">
+                    <input type="text" class="form-input" id="memberName" placeholder="姓名">
+                    <input type="tel" class="form-input" id="memberPhone" placeholder="電話">
                     <button class="btn btn-search" onclick="searchMember()">🔍</button>
                 </div>
                 <div class="search-results" id="searchResults"></div>
             </div>
             
             <div class="form-group">
-                <label class="form-label">姓名<span class="required">*</span></label>
-                <input type="text" class="form-input" id="memberName" placeholder="請輸入會員姓名" required>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">電話<span class="required">*</span></label>
-                <input type="tel" class="form-input" id="memberPhone" placeholder="請輸入會員電話" required>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">學員編號（選填）</label>
-                <input type="text" class="form-input" id="memberId" placeholder="如有學員編號請填寫">
+                <label class="form-label">學員編號（自動帶入）</label>
+                <input type="text" class="form-input" id="memberId" placeholder="搜尋後自動帶入" readonly style="background: #f5f5f5;">
             </div>
             
             <button class="btn btn-primary" id="submitBtn" onclick="submitBooking()">
@@ -596,16 +605,22 @@
             loadBookings();
             
             // Enter 鍵搜尋
-            document.getElementById('searchKeyword').addEventListener('keypress', function(e) {
+            document.getElementById('memberName').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') searchMember();
+            });
+            document.getElementById('memberPhone').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') searchMember();
             });
         });
         
         // 搜尋學員
         async function searchMember() {
-            var keyword = document.getElementById('searchKeyword').value.trim();
+            var name = document.getElementById('memberName').value.trim();
+            var phone = document.getElementById('memberPhone').value.trim();
+            var keyword = name || phone;
+            
             if (!keyword) {
-                showToast('請輸入搜尋關鍵字', 'error');
+                showToast('請輸入姓名或電話', 'error');
                 return;
             }
             
@@ -643,7 +658,7 @@
                     });
                     container.innerHTML = html;
                 } else {
-                    container.innerHTML = '<div class="search-no-result">查無此學員</div>';
+                    container.innerHTML = '<div class="search-no-result">查無此學員，可直接手動填寫</div>';
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -657,7 +672,6 @@
             document.getElementById('memberName').value = name;
             document.getElementById('memberPhone').value = phone;
             document.getElementById('searchResults').innerHTML = '';
-            document.getElementById('searchKeyword').value = '';
             showToast('已選擇：' + name);
         }
         
@@ -753,19 +767,27 @@
             
             var html = '';
             bookings.forEach(function(booking) {
-                html += '<div class="booking-item" id="booking-' + booking.id + '">';
+                // 支援 snake_case 和 camelCase 兩種格式
+                var id = booking.id || '';
+                var memberId = booking.member_id || booking.memberId || '';
+                var memberName = booking.member_name || booking.memberName || '';
+                var memberPhone = booking.member_phone || booking.memberPhone || '';
+                var bookingDate = booking.booking_date || booking.bookingDate || '';
+                var bookingTime = booking.booking_time || booking.bookingTime || '';
+                
+                html += '<div class="booking-item" id="booking-' + id + '">';
                 html += '<div class="booking-info">';
-                html += '<div class="booking-name">' + booking.member_name + '</div>';
+                html += '<div class="booking-name">' + memberName + '</div>';
                 html += '<div class="booking-details">';
-                html += '<span>📅 ' + booking.booking_date + ' ' + booking.booking_time + '</span>';
-                if (booking.member_id) {
-                    html += '<span>🔖 ' + booking.member_id + '</span>';
+                html += '<span>📅 ' + bookingDate + ' ' + bookingTime + '</span>';
+                if (memberId) {
+                    html += '<span>🔖 ' + memberId + '</span>';
                 }
-                html += '<span>📱 ' + booking.member_phone + '</span>';
+                html += '<span>📱 ' + memberPhone + '</span>';
                 html += '</div></div>';
                 html += '<div class="booking-actions">';
-                html += '<button class="btn-icon btn-edit" onclick="openEditModal(' + booking.id + ', \'' + booking.booking_date + '\', \'' + booking.booking_time + '\', \'' + booking.member_name + '\', \'' + booking.member_phone + '\', \'' + (booking.member_id || '') + '\')" title="編輯">✏️</button>';
-                html += '<button class="btn-icon btn-delete" onclick="deleteBooking(' + booking.id + ')" title="刪除">🗑️</button>';
+                html += '<button class="btn-icon btn-edit" onclick="openEditModal(' + id + ', \'' + bookingDate + '\', \'' + bookingTime + '\', \'' + memberName + '\', \'' + memberPhone + '\', \'' + memberId + '\')" title="編輯">✏️</button>';
+                html += '<button class="btn-icon btn-delete" onclick="deleteBooking(' + id + ')" title="刪除">🗑️</button>';
                 html += '</div></div>';
             });
             
