@@ -741,9 +741,14 @@
                 });
                 
                 var result = await response.json();
+                console.log('預約列表回傳:', result);
                 
-                if (result.success && result.bookings) {
-                    renderBookings(result.bookings);
+                if (result.success && result.bookings && Array.isArray(result.bookings)) {
+                    // 過濾掉空資料
+                    var validBookings = result.bookings.filter(function(b) {
+                        return b && (b.member_name || b.memberName);
+                    });
+                    renderBookings(validBookings);
                 } else {
                     renderBookings([]);
                 }
@@ -757,6 +762,11 @@
         function renderBookings(bookings) {
             var container = document.getElementById('bookingList');
             var countEl = document.getElementById('listCount');
+            
+            // 確保是陣列
+            if (!Array.isArray(bookings)) {
+                bookings = [];
+            }
             
             countEl.textContent = bookings.length + ' 筆';
             
