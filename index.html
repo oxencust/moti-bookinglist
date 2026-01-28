@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>預約資訊登記 - 衡點健身</title>
+    <title>預約資訊登記 - 衡點健康</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
     <style>
         :root {
@@ -731,7 +731,7 @@
         </div>
         
         <div class="footer">
-            <p>衡點健身 Balance Point Fitness</p>
+            <p>衡點健身/p>
         </div>
     </div>
     
@@ -760,7 +760,7 @@
                     <span class="edit-info-value" id="editMemberPhoneDisplay">-</span>
                 </div>
                 <div class="edit-info-row">
-                    <span class="edit-info-label">🔖 編號</span>
+                    <span class="edit-info-label">🎫 編號</span>
                     <span class="edit-info-value" id="editMemberIdDisplay">-</span>
                 </div>
             </div>
@@ -780,7 +780,7 @@
             
             <div class="modal-actions">
                 <button class="btn btn-danger" onclick="deleteFromEdit()">🗑️ 刪除預約</button>
-                <button class="btn btn-primary" onclick="saveEdit()">儲存</button>
+                <button class="btn btn-primary" onclick="saveEdit()">確認</button>
             </div>
             <button class="btn btn-cancel-full" onclick="closeEditModal()">取消</button>
         </div>
@@ -991,13 +991,12 @@
                 html += '<div class="booking-details">';
                 html += '<span>📅 ' + bookingDate + ' ' + bookingTime + '</span>';
                 if (memberId) {
-                    html += '<span>🔖 ' + memberId + '</span>';
+                    html += '<span>🏷️ ' + memberId + '</span>';
                 }
                 html += '<span>📱 ' + memberPhone + '</span>';
                 html += '</div></div>';
                 html += '<div class="booking-actions">';
                 html += '<button class="btn-icon btn-edit" onclick="openEditModal(' + id + ', \'' + bookingDate + '\', \'' + bookingTime + '\', \'' + memberName + '\', \'' + memberPhone + '\', \'' + memberId + '\')" title="編輯">✏️</button>';
-                html += '<button class="btn-icon btn-delete" onclick="deleteBooking(' + id + ')" title="刪除">🗑️</button>';
                 html += '</div></div>';
             });
             
@@ -1007,8 +1006,14 @@
         // 編輯預約
         var editingBookingId = null;
         
+        // 記錄原始日期時間
+        var originalDate = '';
+        var originalTime = '';
+        
         function openEditModal(id, date, time, name, phone, memberId) {
             editingBookingId = id;
+            originalDate = date;
+            originalTime = time;
             // 顯示學員資訊（唯讀）
             document.getElementById('editMemberNameDisplay').textContent = name || '-';
             document.getElementById('editMemberPhoneDisplay').textContent = phone || '-';
@@ -1025,16 +1030,21 @@
         
         function closeEditModal() {
             editingBookingId = null;
+            originalDate = '';
+            originalTime = '';
             document.getElementById('editModal').classList.remove('active');
         }
         
         // 從編輯視窗刪除
         async function deleteFromEdit() {
             if (!editingBookingId) return;
-            if (!confirm('確定要刪除這筆預約嗎？')) return;
             
+            var name = document.getElementById('editMemberNameDisplay').textContent;
+            if (!confirm('確定要刪除「' + name + '」的預約嗎？\n\n預約時間：' + originalDate + ' ' + originalTime)) return;
+            
+            var idToDelete = editingBookingId;
             closeEditModal();
-            await deleteBooking(editingBookingId);
+            await deleteBooking(idToDelete);
         }
         
         async function saveEdit() {
@@ -1049,6 +1059,14 @@
             if (!date || !time) {
                 showToast('請填寫日期和時間', 'error');
                 return;
+            }
+            
+            // 檢查是否有變更
+            if (date !== originalDate || time !== originalTime) {
+                var confirmMsg = '確認變更預約時間？\n\n' +
+                    '原時間：' + originalDate + ' ' + originalTime + '\n' +
+                    '新時間：' + date + ' ' + time;
+                if (!confirm(confirmMsg)) return;
             }
             
             showLoading('儲存中...');
