@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>預約資訊登記 - 衡點健身</title>
+    <title>預約資訊登記 - 衡點健康</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
     <style>
         :root {
@@ -314,6 +314,62 @@
             background: #d0d0d0;
         }
         
+        .btn-cancel-full {
+            width: 100%;
+            margin-top: 12px;
+            padding: 12px;
+            background: #f5f5f5;
+            color: #666;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-cancel-full:hover {
+            background: #e0e0e0;
+        }
+        
+        .btn-danger {
+            background: var(--pink);
+            color: var(--white);
+        }
+        
+        .btn-danger:hover {
+            background: var(--pink-dark);
+        }
+        
+        /* 編輯 Modal 學員資訊 */
+        .edit-member-info {
+            background: var(--green-light);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .edit-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(95, 132, 111, 0.2);
+        }
+        
+        .edit-info-row:last-child {
+            border-bottom: none;
+        }
+        
+        .edit-info-label {
+            color: var(--green-dark);
+            font-size: 0.9rem;
+        }
+        
+        .edit-info-value {
+            font-weight: 600;
+            color: #333;
+        }
+        
         .empty-list {
             text-align: center;
             padding: 40px 20px;
@@ -408,6 +464,16 @@
             min-width: 0;
         }
         
+        .datetime-row {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .datetime-row .form-input {
+            flex: 1;
+            min-width: 0;
+        }
+        
         .btn-search {
             padding: 12px 14px;
             background: var(--green);
@@ -478,6 +544,134 @@
             color: var(--green-dark);
             font-size: 0.85rem;
         }
+        
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+            
+            .header {
+                padding: 20px 16px;
+            }
+            
+            .header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .modal-box {
+                margin: 16px;
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 8px;
+            }
+            
+            .header {
+                padding: 16px 12px;
+                border-radius: 12px;
+            }
+            
+            .header h1 {
+                font-size: 1.2rem;
+            }
+            
+            .header p {
+                font-size: 0.85rem;
+            }
+            
+            .card {
+                padding: 16px;
+                border-radius: 12px;
+                margin-bottom: 12px;
+            }
+            
+            .card-title {
+                font-size: 1rem;
+            }
+            
+            .form-input {
+                padding: 10px 14px;
+                font-size: 0.95rem;
+            }
+            
+            .search-row-inline {
+                flex-wrap: wrap;
+            }
+            
+            .search-row-inline .form-input {
+                flex: 1 1 calc(50% - 5px);
+                min-width: 100px;
+            }
+            
+            .btn-search {
+                width: 100%;
+                margin-top: 8px;
+                height: 44px;
+            }
+            
+            .booking-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            
+            .booking-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            .modal-box {
+                margin: 8px;
+                padding: 16px;
+                max-width: none;
+            }
+            
+            .modal-actions {
+                flex-direction: column;
+            }
+            
+            .modal-actions .btn {
+                width: 100%;
+            }
+            
+            .edit-info-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+        }
+        
+        /* 平板橫向 */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .container {
+                max-width: 600px;
+            }
+        }
+        
+        /* 桌面 */
+        @media (min-width: 1025px) {
+            .container {
+                max-width: 700px;
+            }
+            
+            .booking-list {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            
+            .empty-list {
+                grid-column: 1 / -1;
+            }
+        }
     </style>
 </head>
 <body>
@@ -491,13 +685,11 @@
             <div class="card-title">📝 新增預約</div>
             
             <div class="form-group">
-                <label class="form-label">預約日期<span class="required">*</span></label>
-                <input type="date" class="form-input" id="bookingDate" required>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">預約時間<span class="required">*</span></label>
-                <input type="time" class="form-input" id="bookingTime" required>
+                <label class="form-label">預約日期時間<span class="required">*</span></label>
+                <div class="datetime-row">
+                    <input type="date" class="form-input" id="bookingDate" required>
+                    <input type="time" class="form-input" id="bookingTime" required>
+                </div>
             </div>
             
             <div class="form-group">
@@ -539,7 +731,7 @@
         </div>
         
         <div class="footer">
-            <p>衡點健身 Balance Point Fitness</p>
+            <p>衡點健身</p>
         </div>
     </div>
     
@@ -557,35 +749,40 @@
         <div class="modal-box">
             <div class="modal-title">✏️ 編輯預約</div>
             
-            <div class="form-group">
-                <label class="form-label">預約日期<span class="required">*</span></label>
-                <input type="date" class="form-input" id="editBookingDate" required>
+            <!-- 學員資訊（唯讀） -->
+            <div class="edit-member-info" id="editMemberInfo">
+                <div class="edit-info-row">
+                    <span class="edit-info-label">👤 姓名</span>
+                    <span class="edit-info-value" id="editMemberNameDisplay">-</span>
+                </div>
+                <div class="edit-info-row">
+                    <span class="edit-info-label">📱 電話</span>
+                    <span class="edit-info-value" id="editMemberPhoneDisplay">-</span>
+                </div>
+                <div class="edit-info-row">
+                    <span class="edit-info-label">🔖 編號</span>
+                    <span class="edit-info-value" id="editMemberIdDisplay">-</span>
+                </div>
             </div>
             
             <div class="form-group">
-                <label class="form-label">預約時間<span class="required">*</span></label>
-                <input type="time" class="form-input" id="editBookingTime" required>
+                <label class="form-label">預約日期時間<span class="required">*</span></label>
+                <div class="datetime-row">
+                    <input type="date" class="form-input" id="editBookingDate" required>
+                    <input type="time" class="form-input" id="editBookingTime" required>
+                </div>
             </div>
             
-            <div class="form-group">
-                <label class="form-label">姓名<span class="required">*</span></label>
-                <input type="text" class="form-input" id="editMemberName" required>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">電話<span class="required">*</span></label>
-                <input type="tel" class="form-input" id="editMemberPhone" required>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">學員編號（選填）</label>
-                <input type="text" class="form-input" id="editMemberId">
-            </div>
+            <!-- 隱藏欄位 -->
+            <input type="hidden" id="editMemberName">
+            <input type="hidden" id="editMemberPhone">
+            <input type="hidden" id="editMemberId">
             
             <div class="modal-actions">
-                <button class="btn btn-cancel" onclick="closeEditModal()">取消</button>
+                <button class="btn btn-danger" onclick="deleteFromEdit()">🗑️ 刪除預約</button>
                 <button class="btn btn-primary" onclick="saveEdit()">儲存</button>
             </div>
+            <button class="btn btn-cancel-full" onclick="closeEditModal()">取消</button>
         </div>
     </div>
 
@@ -809,11 +1006,17 @@
         
         function openEditModal(id, date, time, name, phone, memberId) {
             editingBookingId = id;
-            document.getElementById('editBookingDate').value = date;
-            document.getElementById('editBookingTime').value = time;
+            // 顯示學員資訊（唯讀）
+            document.getElementById('editMemberNameDisplay').textContent = name || '-';
+            document.getElementById('editMemberPhoneDisplay').textContent = phone || '-';
+            document.getElementById('editMemberIdDisplay').textContent = memberId || '-';
+            // 設定隱藏欄位
             document.getElementById('editMemberName').value = name;
             document.getElementById('editMemberPhone').value = phone;
             document.getElementById('editMemberId').value = memberId;
+            // 設定日期時間
+            document.getElementById('editBookingDate').value = date;
+            document.getElementById('editBookingTime').value = time;
             document.getElementById('editModal').classList.add('active');
         }
         
@@ -822,17 +1025,26 @@
             document.getElementById('editModal').classList.remove('active');
         }
         
+        // 從編輯視窗刪除
+        async function deleteFromEdit() {
+            if (!editingBookingId) return;
+            if (!confirm('確定要刪除這筆預約嗎？')) return;
+            
+            closeEditModal();
+            await deleteBooking(editingBookingId);
+        }
+        
         async function saveEdit() {
             if (!editingBookingId) return;
             
             var date = document.getElementById('editBookingDate').value;
             var time = document.getElementById('editBookingTime').value;
-            var name = document.getElementById('editMemberName').value.trim();
-            var phone = document.getElementById('editMemberPhone').value.trim();
-            var memberId = document.getElementById('editMemberId').value.trim();
+            var name = document.getElementById('editMemberName').value;
+            var phone = document.getElementById('editMemberPhone').value;
+            var memberId = document.getElementById('editMemberId').value;
             
-            if (!date || !time || !name || !phone) {
-                showToast('請填寫所有必填欄位', 'error');
+            if (!date || !time) {
+                showToast('請填寫日期和時間', 'error');
                 return;
             }
             
@@ -873,7 +1085,7 @@
         
         // 刪除預約
         async function deleteBooking(id) {
-            if (!confirm('確定要刪除這筆預約嗎？')) return;
+            if (!id) return;
             
             showLoading('刪除中...');
             
