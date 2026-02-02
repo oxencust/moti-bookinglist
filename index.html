@@ -120,6 +120,48 @@
             gap: 12px;
         }
         
+        .booking-type-btns {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .type-btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: var(--white);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            color: #666;
+        }
+        
+        .type-btn:hover {
+            border-color: var(--green);
+            background: #f8fdf8;
+        }
+        
+        .type-btn.active {
+            border-color: var(--green);
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            color: var(--green-dark);
+        }
+        
+        .type-btn.active[data-type="new"] {
+            border-color: #4CAF50;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            color: #2E7D32;
+        }
+        
+        .type-btn.active[data-type="retest"] {
+            border-color: #2196F3;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            color: #1565C0;
+        }
+        
         .btn {
             width: 100%;
             padding: 14px 24px;
@@ -836,6 +878,19 @@
                 <input type="text" class="form-input" id="memberId" placeholder="搜尋後自動帶入" readonly style="background: #f5f5f5;">
             </div>
             
+            <div class="form-group">
+                <label class="form-label">預約類型<span class="required">*</span></label>
+                <div class="booking-type-btns">
+                    <button type="button" class="type-btn" data-type="new" onclick="selectBookingType('new')">
+                        🆕 新客
+                    </button>
+                    <button type="button" class="type-btn" data-type="retest" onclick="selectBookingType('retest')">
+                        🔄 複測
+                    </button>
+                </div>
+                <input type="hidden" id="bookingType" value="">
+            </div>
+            
             <button class="btn btn-primary" id="submitBtn" onclick="submitBooking()">
                 新增預約
             </button>
@@ -1013,6 +1068,13 @@
             MAKE_WEBHOOK_URL: 'https://hook.us2.make.com/vsk129ur2xv54sscfoflt5aacil4mws2'
         };
         
+        // 安全解析 JSON（處理控制字元）
+        async function safeParseJSON(response) {
+            var text = await response.text();
+            text = text.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '');
+            return JSON.parse(text);
+        }
+        
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
             // 設定預設日期為今天
@@ -1058,7 +1120,7 @@
                     })
                 });
                 
-                var result = await response.json();
+                var result = await safeParseJSON(response);
                 console.log('搜尋結果:', result);
                 
                 // 處理回傳的資料（支援 member 單數或 members 複數格式）
@@ -1148,6 +1210,18 @@
             showToast('已選擇：' + name);
         }
         
+        // 選擇預約類型
+        function selectBookingType(type) {
+            // 移除所有 active
+            document.querySelectorAll('.type-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            // 設定選中的按鈕
+            document.querySelector('.type-btn[data-type="' + type + '"]').classList.add('active');
+            // 更新隱藏欄位
+            document.getElementById('bookingType').value = type;
+        }
+        
         // 新增預約
         async function submitBooking() {
             var date = document.getElementById('bookingDate').value;
@@ -1157,10 +1231,16 @@
             var name = document.getElementById('memberName').value.trim();
             var phone = document.getElementById('memberPhone').value.trim();
             var memberId = document.getElementById('memberId').value.trim();
+            var bookingType = document.getElementById('bookingType').value;
             
             // 驗證
             if (!date || !hour || !minute || !name || !phone) {
                 showToast('請填寫所有必填欄位', 'error');
+                return;
+            }
+            
+            if (!bookingType) {
+                showToast('請選擇預約類型（新客/複測）', 'error');
                 return;
             }
             
@@ -1177,11 +1257,12 @@
                         bookingTime: time,
                         memberName: name,
                         memberPhone: phone,
-                        memberId: memberId
+                        memberId: memberId,
+                        bookingType: bookingType
                     })
                 });
                 
-                var result = await response.json();
+                var result = await safeParseJSON(response);
                 
                 if (result.success) {
                     showToast('預約新增成功！');
@@ -1191,6 +1272,11 @@
                     document.getElementById('memberName').value = '';
                     document.getElementById('memberPhone').value = '';
                     document.getElementById('memberId').value = '';
+                    // 重置預約類型為未選擇
+                    document.querySelectorAll('.type-btn').forEach(function(btn) {
+                        btn.classList.remove('active');
+                    });
+                    document.getElementById('bookingType').value = '';
                     // 重新載入列表
                     loadBookings();
                 } else {
@@ -1216,7 +1302,7 @@
                     })
                 });
                 
-                var result = await response.json();
+                var result = await safeParseJSON(response);
                 console.log('預約列表回傳:', result);
                 
                 if (result.success && result.bookings && Array.isArray(result.bookings)) {
@@ -1384,7 +1470,7 @@
                     })
                 });
                 
-                var result = await response.json();
+                var result = await safeParseJSON(response);
                 
                 if (result.success) {
                     showToast('已更新');
@@ -1418,7 +1504,7 @@
                     })
                 });
                 
-                var result = await response.json();
+                var result = await safeParseJSON(response);
                 
                 if (result.success) {
                     showToast('已刪除');
