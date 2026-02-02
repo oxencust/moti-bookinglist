@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>預約資訊登記 - 衡點健康</title>
+    <title>預約資訊登記 - 衡點健身</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
     <style>
         :root {
@@ -106,6 +106,12 @@
             outline: none;
             border-color: var(--green);
             box-shadow: 0 0 0 3px var(--green-light);
+        }
+        
+        .form-hint {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-top: 6px;
         }
         
         .form-row {
@@ -474,6 +480,25 @@
             min-width: 0;
         }
         
+        .time-select-row {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex: 1;
+        }
+        
+        .time-select {
+            flex: 1;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .time-colon {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--green-dark);
+        }
+        
         .btn-search {
             padding: 12px 14px;
             background: var(--green);
@@ -536,6 +561,17 @@
             padding: 12px;
             text-align: center;
             color: var(--gray);
+        }
+        
+        .search-multiple-hint {
+            padding: 10px 12px;
+            background: var(--yellow-light);
+            border: 1px solid var(--yellow);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            color: var(--yellow-dark);
+            font-size: 0.9rem;
+            text-align: center;
         }
         
         .footer {
@@ -688,7 +724,99 @@
                 <label class="form-label">預約日期時間<span class="required">*</span></label>
                 <div class="datetime-row">
                     <input type="date" class="form-input" id="bookingDate" required>
-                    <input type="time" class="form-input" id="bookingTime" required>
+                    <div class="time-select-row">
+                        <select class="form-input time-select" id="bookingHour">
+                            <option value="">時</option>
+                            <option value="00">00</option>
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+                            <option value="23">23</option>
+                        </select>
+                        <span class="time-colon">:</span>
+                        <select class="form-input time-select" id="bookingMinute">
+                            <option value="">分</option>
+                            <option value="00">00</option>
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+                            <option value="23">23</option>
+                            <option value="24">24</option>
+                            <option value="25">25</option>
+                            <option value="26">26</option>
+                            <option value="27">27</option>
+                            <option value="28">28</option>
+                            <option value="29">29</option>
+                            <option value="30">30</option>
+                            <option value="31">31</option>
+                            <option value="32">32</option>
+                            <option value="33">33</option>
+                            <option value="34">34</option>
+                            <option value="35">35</option>
+                            <option value="36">36</option>
+                            <option value="37">37</option>
+                            <option value="38">38</option>
+                            <option value="39">39</option>
+                            <option value="40">40</option>
+                            <option value="41">41</option>
+                            <option value="42">42</option>
+                            <option value="43">43</option>
+                            <option value="44">44</option>
+                            <option value="45">45</option>
+                            <option value="46">46</option>
+                            <option value="47">47</option>
+                            <option value="48">48</option>
+                            <option value="49">49</option>
+                            <option value="50">50</option>
+                            <option value="51">51</option>
+                            <option value="52">52</option>
+                            <option value="53">53</option>
+                            <option value="54">54</option>
+                            <option value="55">55</option>
+                            <option value="56">56</option>
+                            <option value="57">57</option>
+                            <option value="58">58</option>
+                            <option value="59">59</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             
@@ -699,6 +827,7 @@
                     <input type="tel" class="form-input" id="memberPhone" placeholder="電話">
                     <button class="btn btn-search" onclick="searchMember()">🔍</button>
                 </div>
+                <div class="form-hint">輸入姓名或電話搜尋，如有重複可選擇正確學員</div>
                 <div class="search-results" id="searchResults"></div>
             </div>
             
@@ -731,7 +860,7 @@
         </div>
         
         <div class="footer">
-            <p>衡點健身</p>
+            <p>衡點健身 Balance Point Fitness</p>
         </div>
     </div>
     
@@ -760,7 +889,7 @@
                     <span class="edit-info-value" id="editMemberPhoneDisplay">-</span>
                 </div>
                 <div class="edit-info-row">
-                    <span class="edit-info-label">🎫 編號</span>
+                    <span class="edit-info-label">🔖 編號</span>
                     <span class="edit-info-value" id="editMemberIdDisplay">-</span>
                 </div>
             </div>
@@ -769,7 +898,99 @@
                 <label class="form-label">預約日期時間<span class="required">*</span></label>
                 <div class="datetime-row">
                     <input type="date" class="form-input" id="editBookingDate" required>
-                    <input type="time" class="form-input" id="editBookingTime" required>
+                    <div class="time-select-row">
+                        <select class="form-input time-select" id="editBookingHour">
+                            <option value="">時</option>
+                            <option value="00">00</option>
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+                            <option value="23">23</option>
+                        </select>
+                        <span class="time-colon">:</span>
+                        <select class="form-input time-select" id="editBookingMinute">
+                            <option value="">分</option>
+                            <option value="00">00</option>
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+                            <option value="23">23</option>
+                            <option value="24">24</option>
+                            <option value="25">25</option>
+                            <option value="26">26</option>
+                            <option value="27">27</option>
+                            <option value="28">28</option>
+                            <option value="29">29</option>
+                            <option value="30">30</option>
+                            <option value="31">31</option>
+                            <option value="32">32</option>
+                            <option value="33">33</option>
+                            <option value="34">34</option>
+                            <option value="35">35</option>
+                            <option value="36">36</option>
+                            <option value="37">37</option>
+                            <option value="38">38</option>
+                            <option value="39">39</option>
+                            <option value="40">40</option>
+                            <option value="41">41</option>
+                            <option value="42">42</option>
+                            <option value="43">43</option>
+                            <option value="44">44</option>
+                            <option value="45">45</option>
+                            <option value="46">46</option>
+                            <option value="47">47</option>
+                            <option value="48">48</option>
+                            <option value="49">49</option>
+                            <option value="50">50</option>
+                            <option value="51">51</option>
+                            <option value="52">52</option>
+                            <option value="53">53</option>
+                            <option value="54">54</option>
+                            <option value="55">55</option>
+                            <option value="56">56</option>
+                            <option value="57">57</option>
+                            <option value="58">58</option>
+                            <option value="59">59</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             
@@ -814,9 +1035,9 @@
         async function searchMember() {
             var name = document.getElementById('memberName').value.trim();
             var phone = document.getElementById('memberPhone').value.trim();
-            var keyword = name || phone;
             
-            if (!keyword) {
+            // 可以用姓名或電話搜尋
+            if (!name && !phone) {
                 showToast('請輸入姓名或電話', 'error');
                 return;
             }
@@ -831,24 +1052,56 @@
                     body: JSON.stringify({
                         action: 'booking',
                         type: 'search_member',
-                        keyword: keyword
+                        keyword: name || phone,
+                        name: name,
+                        phone: phone
                     })
                 });
                 
                 var result = await response.json();
+                console.log('搜尋結果:', result);
                 
-                if (result.success && result.members && result.members.length > 0) {
+                // 處理回傳的 members（可能是陣列或單一物件）
+                var members = [];
+                if (result.success && result.members) {
+                    if (Array.isArray(result.members)) {
+                        members = result.members;
+                    } else if (typeof result.members === 'object') {
+                        members = [result.members];
+                    }
+                }
+                
+                // 過濾掉無效資料（null、空物件、無姓名）
+                members = members.filter(function(m) {
+                    return m && m.name && m.name !== 'null' && m.name !== 'undefined';
+                });
+                
+                if (members.length > 0) {
                     var html = '';
-                    result.members.forEach(function(member) {
+                    
+                    // 如果有多筆結果，顯示提示
+                    if (members.length > 1) {
+                        html += '<div class="search-multiple-hint">⚠️ 找到 ' + members.length + ' 位學員，請選擇正確的人員：</div>';
+                    }
+                    
+                    members.forEach(function(member) {
+                        // 處理可能的 null 值
+                        var memberId = (member.id && member.id !== 'null') ? member.id : '';
+                        var memberName = member.name || '';
+                        var memberPhone = (member.phone && member.phone !== 'null') ? member.phone : '';
+                        
+                        // 跳過無效資料
+                        if (!memberName) return;
+                        
                         html += '<div class="search-result-item" onclick="selectMember(\'' + 
-                            (member.id || '') + '\', \'' + 
-                            member.name + '\', \'' + 
-                            member.phone + '\')">';
+                            escapeQuotes(memberId) + '\', \'' + 
+                            escapeQuotes(memberName) + '\', \'' + 
+                            escapeQuotes(memberPhone) + '\')">';
                         html += '<div class="search-result-info">';
-                        html += '<div class="search-result-name">' + member.name + '</div>';
+                        html += '<div class="search-result-name">' + escapeHtml(memberName) + '</div>';
                         html += '<div class="search-result-details">';
-                        if (member.id) html += '🔖 ' + member.id + ' · ';
-                        html += '📱 ' + member.phone;
+                        if (memberId) html += '🏷️ ' + escapeHtml(memberId) + ' · ';
+                        html += '📱 ' + (memberPhone ? escapeHtml(memberPhone) : '無電話');
                         html += '</div></div>';
                         html += '<span>選擇 →</span>';
                         html += '</div>';
@@ -863,6 +1116,22 @@
             }
         }
         
+        // 跳脫引號
+        function escapeQuotes(str) {
+            if (!str) return '';
+            return String(str).replace(/'/g, "\\'").replace(/"/g, '\\"');
+        }
+        
+        // 跳脫 HTML
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+        
         // 選擇學員
         function selectMember(id, name, phone) {
             document.getElementById('memberId').value = id;
@@ -875,13 +1144,15 @@
         // 新增預約
         async function submitBooking() {
             var date = document.getElementById('bookingDate').value;
-            var time = document.getElementById('bookingTime').value;
+            var hour = document.getElementById('bookingHour').value;
+            var minute = document.getElementById('bookingMinute').value;
+            var time = (hour && minute) ? (hour + ':' + minute) : '';
             var name = document.getElementById('memberName').value.trim();
             var phone = document.getElementById('memberPhone').value.trim();
             var memberId = document.getElementById('memberId').value.trim();
             
             // 驗證
-            if (!date || !time || !name || !phone) {
+            if (!date || !hour || !minute || !name || !phone) {
                 showToast('請填寫所有必填欄位', 'error');
                 return;
             }
@@ -908,7 +1179,8 @@
                 if (result.success) {
                     showToast('預約新增成功！');
                     // 清空表單
-                    document.getElementById('bookingTime').value = '';
+                    document.getElementById('bookingHour').value = '';
+                    document.getElementById('bookingMinute').value = '';
                     document.getElementById('memberName').value = '';
                     document.getElementById('memberPhone').value = '';
                     document.getElementById('memberId').value = '';
@@ -975,7 +1247,7 @@
             var html = '';
             bookings.forEach(function(booking) {
                 console.log('booking 資料:', booking);
-                // 支援 snake_case 和 camelCase 兩種格式
+                // 支援 snake_case 和 camelCase 兩種格式，並處理 null 值
                 var id = booking.id || '';
                 var memberId = booking.member_id || booking.memberId || booking.memberid || '';
                 var memberName = booking.member_name || booking.memberName || '';
@@ -983,20 +1255,28 @@
                 var bookingDate = booking.booking_date || booking.bookingDate || '';
                 var bookingTime = booking.booking_time || booking.bookingTime || '';
                 
+                // 處理 null 字串
+                if (memberId === 'null' || memberId === 'undefined') memberId = '';
+                if (memberName === 'null' || memberName === 'undefined') memberName = '';
+                if (memberPhone === 'null' || memberPhone === 'undefined') memberPhone = '';
+                
+                // 跳過無效資料
+                if (!memberName) return;
+                
                 console.log('解析後 memberId:', memberId);
                 
                 html += '<div class="booking-item" id="booking-' + id + '">';
                 html += '<div class="booking-info">';
-                html += '<div class="booking-name">' + memberName + '</div>';
+                html += '<div class="booking-name">' + escapeHtml(memberName) + '</div>';
                 html += '<div class="booking-details">';
-                html += '<span>📅 ' + bookingDate + ' ' + bookingTime + '</span>';
+                html += '<span>📅 ' + escapeHtml(bookingDate) + ' ' + escapeHtml(bookingTime) + '</span>';
                 if (memberId) {
-                    html += '<span>🏷️ ' + memberId + '</span>';
+                    html += '<span>🏷️ ' + escapeHtml(memberId) + '</span>';
                 }
-                html += '<span>📱 ' + memberPhone + '</span>';
+                html += '<span>📱 ' + (memberPhone ? escapeHtml(memberPhone) : '-') + '</span>';
                 html += '</div></div>';
                 html += '<div class="booking-actions">';
-                html += '<button class="btn-icon btn-edit" onclick="openEditModal(' + id + ', \'' + bookingDate + '\', \'' + bookingTime + '\', \'' + memberName + '\', \'' + memberPhone + '\', \'' + memberId + '\')" title="編輯">✏️</button>';
+                html += '<button class="btn-icon btn-edit" onclick="openEditModal(' + id + ', \'' + escapeQuotes(bookingDate) + '\', \'' + escapeQuotes(bookingTime) + '\', \'' + escapeQuotes(memberName) + '\', \'' + escapeQuotes(memberPhone) + '\', \'' + escapeQuotes(memberId) + '\')" title="編輯">✏️</button>';
                 html += '</div></div>';
             });
             
@@ -1022,9 +1302,17 @@
             document.getElementById('editMemberName').value = name;
             document.getElementById('editMemberPhone').value = phone;
             document.getElementById('editMemberId').value = memberId;
-            // 設定日期時間
+            // 設定日期
             document.getElementById('editBookingDate').value = date;
-            document.getElementById('editBookingTime').value = time;
+            // 設定時間下拉選單（格式：HH:MM）
+            if (time && time.includes(':')) {
+                var timeParts = time.split(':');
+                document.getElementById('editBookingHour').value = timeParts[0];
+                document.getElementById('editBookingMinute').value = timeParts[1];
+            } else {
+                document.getElementById('editBookingHour').value = '';
+                document.getElementById('editBookingMinute').value = '';
+            }
             document.getElementById('editModal').classList.add('active');
         }
         
@@ -1051,12 +1339,14 @@
             if (!editingBookingId) return;
             
             var date = document.getElementById('editBookingDate').value;
-            var time = document.getElementById('editBookingTime').value;
+            var hour = document.getElementById('editBookingHour').value;
+            var minute = document.getElementById('editBookingMinute').value;
+            var time = (hour && minute) ? (hour + ':' + minute) : '';
             var name = document.getElementById('editMemberName').value;
             var phone = document.getElementById('editMemberPhone').value;
             var memberId = document.getElementById('editMemberId').value;
             
-            if (!date || !time) {
+            if (!date || !hour || !minute) {
                 showToast('請填寫日期和時間', 'error');
                 return;
             }
