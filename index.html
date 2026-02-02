@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>預約資訊登記 - 衡點健身</title>
+    <title>預約資訊登記 - 衡點健康</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
     <style>
         :root {
@@ -860,7 +860,7 @@
         </div>
         
         <div class="footer">
-            <p>衡點健身 Balance Point Fitness</p>
+            <p>衡點健康</p>
         </div>
     </div>
     
@@ -1061,13 +1061,20 @@
                 var result = await response.json();
                 console.log('搜尋結果:', result);
                 
-                // 處理回傳的 members（可能是陣列或單一物件）
+                // 處理回傳的資料（支援 member 單數或 members 複數格式）
                 var members = [];
-                if (result.success && result.members) {
-                    if (Array.isArray(result.members)) {
-                        members = result.members;
-                    } else if (typeof result.members === 'object') {
-                        members = [result.members];
+                if (result.success) {
+                    // 支援 members 陣列格式
+                    if (result.members) {
+                        if (Array.isArray(result.members)) {
+                            members = result.members;
+                        } else if (typeof result.members === 'object') {
+                            members = [result.members];
+                        }
+                    }
+                    // 支援 member 單一物件格式
+                    if (result.member && typeof result.member === 'object') {
+                        members.push(result.member);
                     }
                 }
                 
