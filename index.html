@@ -1053,6 +1053,7 @@
             <input type="hidden" id="editMemberName">
             <input type="hidden" id="editMemberPhone">
             <input type="hidden" id="editMemberId">
+            <input type="hidden" id="editBookingType">
             
             <div class="modal-actions">
                 <button class="btn btn-danger" onclick="deleteFromEdit()">🗑️ 刪除預約</button>
@@ -1347,6 +1348,7 @@
                 var memberPhone = booking.member_phone || booking.memberPhone || '';
                 var bookingDate = booking.booking_date || booking.bookingDate || '';
                 var bookingTime = booking.booking_time || booking.bookingTime || '';
+                var bookingType = booking.booking_type || booking.bookingType || '';
                 
                 // 處理 null 字串
                 if (memberId === 'null' || memberId === 'undefined') memberId = '';
@@ -1369,7 +1371,7 @@
                 html += '<span>📱 ' + (memberPhone ? escapeHtml(memberPhone) : '-') + '</span>';
                 html += '</div></div>';
                 html += '<div class="booking-actions">';
-                html += '<button class="btn-icon btn-edit" onclick="openEditModal(' + id + ', \'' + escapeQuotes(bookingDate) + '\', \'' + escapeQuotes(bookingTime) + '\', \'' + escapeQuotes(memberName) + '\', \'' + escapeQuotes(memberPhone) + '\', \'' + escapeQuotes(memberId) + '\')" title="編輯">✏️</button>';
+                html += '<button class="btn-icon btn-edit" onclick="openEditModal(' + id + ', \'' + escapeQuotes(bookingDate) + '\', \'' + escapeQuotes(bookingTime) + '\', \'' + escapeQuotes(memberName) + '\', \'' + escapeQuotes(memberPhone) + '\', \'' + escapeQuotes(memberId) + '\', \'' + escapeQuotes(bookingType) + '\')" title="編輯">✏️</button>';
                 html += '</div></div>';
             });
             
@@ -1383,7 +1385,7 @@
         var originalDate = '';
         var originalTime = '';
         
-        function openEditModal(id, date, time, name, phone, memberId) {
+        function openEditModal(id, date, time, name, phone, memberId, bookingType) {
             editingBookingId = id;
             originalDate = date;
             originalTime = time;
@@ -1406,6 +1408,7 @@
                 document.getElementById('editBookingHour').value = '';
                 document.getElementById('editBookingMinute').value = '';
             }
+            document.getElementById('editBookingType').value = bookingType || '';
             document.getElementById('editModal').classList.add('active');
         }
         
@@ -1422,12 +1425,13 @@
             
             var name = document.getElementById('editMemberNameDisplay').textContent;
             var phone = document.getElementById('editMemberPhoneDisplay').textContent;
+            var bookingType = document.getElementById('editBookingType').value;
             
             if (!confirm('確定要刪除「' + name + '」的預約嗎？\n\n預約時間：' + originalDate + ' ' + originalTime)) return;
             
             var idToDelete = editingBookingId;
             closeEditModal();
-            await deleteBooking(idToDelete, name, phone, originalDate, originalTime);
+            await deleteBooking(idToDelete, name, phone, originalDate, originalTime, bookingType);
         }
         
         async function saveEdit() {
@@ -1490,7 +1494,7 @@
         }
         
         // 刪除預約
-        async function deleteBooking(id) {
+        async function deleteBooking(id, memberName, memberPhone, bookingDate, bookingTime, bookingType) {
             if (!id) return;
             
             showLoading('刪除中...');
@@ -1506,7 +1510,8 @@
                         memberName: memberName || '',
                         memberPhone: memberPhone || '',
                         bookingDate: bookingDate || '',
-                        bookingTime: bookingTime || ''
+                        bookingTime: bookingTime || '',
+                        bookingType: bookingType || '' 
                     })
                 });
                 
