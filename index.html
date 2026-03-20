@@ -1328,7 +1328,7 @@
                 if (result.success && Array.isArray(result.analysts)) {
                     var html = '<option value="">請選擇分析師</option>';
                     result.analysts.forEach(function(coach) {
-                        var name = coach.name || coach.real_name || '';
+                        var name = coach.coach_name || coach.name || coach.real_name || '';
                         if (name) {
                             html += '<option value="' + escapeHtml(name) + '">' + escapeHtml(name) + '</option>';
                         }
