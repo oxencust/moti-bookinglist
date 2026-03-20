@@ -891,6 +891,13 @@
                 <input type="hidden" id="bookingType" value="">
             </div>
             
+            <div class="form-group">
+                <label class="form-label">分析師<span class="required">*</span></label>
+                <select class="form-input" id="analystName">
+                    <option value="">載入中...</option>
+                </select>
+            </div>
+
             <button class="btn btn-primary" id="submitBtn" onclick="submitBooking()">
                 新增預約
             </button>
@@ -1054,6 +1061,7 @@
             <input type="hidden" id="editMemberPhone">
             <input type="hidden" id="editMemberId">
             <input type="hidden" id="editBookingType">
+            <input type="hidden" id="editAnalystName">
             
             <div class="modal-actions">
                 <button class="btn btn-danger" onclick="deleteFromEdit()">🗑️ 刪除預約</button>
@@ -1081,6 +1089,9 @@
             // 設定預設日期為今天
             var today = new Date().toISOString().split('T')[0];
             document.getElementById('bookingDate').value = today;
+            
+            // 載入分析師列表
+            loadAnalysts();
             
             // 載入待預約列表
             loadBookings();
@@ -1233,6 +1244,7 @@
             var phone = document.getElementById('memberPhone').value.trim();
             var memberId = document.getElementById('memberId').value.trim();
             var bookingType = document.getElementById('bookingType').value;
+            var analystName = document.getElementById('analystName').value;
             
             // 驗證
             if (!date || !hour || !minute || !name || !phone) {
@@ -1242,6 +1254,11 @@
             
             if (!bookingType) {
                 showToast('請選擇預約類型（新客/複測）', 'error');
+                return;
+            }
+            
+            if (!analystName) {
+                showToast('請選擇分析師', 'error');
                 return;
             }
             
@@ -1259,7 +1276,8 @@
                         memberName: name,
                         memberPhone: phone,
                         memberId: memberId,
-                        bookingType: bookingType
+                        bookingType: bookingType,
+                        analystName: analystName
                     })
                 });
                 
@@ -1278,6 +1296,7 @@
                         btn.classList.remove('active');
                     });
                     document.getElementById('bookingType').value = '';
+                    document.getElementById('analystName').value = '';
                     // 重新載入列表
                     loadBookings();
                 } else {
@@ -1288,6 +1307,39 @@
                 showToast('新增失敗，請稍後再試', 'error');
             } finally {
                 hideLoading();
+            }
+        }
+
+        // 載入分析師列表
+        async function loadAnalysts() {
+            var select = document.getElementById('analystName');
+            try {
+                var response = await fetch(CONFIG.MAKE_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'booking',
+                        type: 'list_analysts'
+                    })
+                });
+                
+                var result = await safeParseJSON(response);
+                
+                if (result.success && Array.isArray(result.analysts)) {
+                    var html = '<option value="">請選擇分析師</option>';
+                    result.analysts.forEach(function(coach) {
+                        var name = coach.name || coach.real_name || '';
+                        if (name) {
+                            html += '<option value="' + escapeHtml(name) + '">' + escapeHtml(name) + '</option>';
+                        }
+                    });
+                    select.innerHTML = html;
+                } else {
+                    select.innerHTML = '<option value="">載入失敗，請重新整理</option>';
+                }
+            } catch (error) {
+                console.error('載入分析師失敗:', error);
+                select.innerHTML = '<option value="">載入失敗，請重新整理</option>';
             }
         }
         
@@ -1349,6 +1401,7 @@
                 var bookingDate = booking.booking_date || booking.bookingDate || '';
                 var bookingTime = booking.booking_time || booking.bookingTime || '';
                 var bookingType = booking.booking_type || booking.bookingType || '';
+                var analystName = booking.analyst_name || booking.analystName || '';
                 
                 // 處理 null 字串
                 if (memberId === 'null' || memberId === 'undefined') memberId = '';
@@ -1371,7 +1424,7 @@
                 html += '<span>📱 ' + (memberPhone ? escapeHtml(memberPhone) : '-') + '</span>';
                 html += '</div></div>';
                 html += '<div class="booking-actions">';
-                html += '<button class="btn-icon btn-edit" onclick="openEditModal(' + id + ', \'' + escapeQuotes(bookingDate) + '\', \'' + escapeQuotes(bookingTime) + '\', \'' + escapeQuotes(memberName) + '\', \'' + escapeQuotes(memberPhone) + '\', \'' + escapeQuotes(memberId) + '\', \'' + escapeQuotes(bookingType) + '\')" title="編輯">✏️</button>';
+                html += '<button class="btn-icon btn-edit" onclick="openEditModal(' + id + ', \'' + escapeQuotes(bookingDate) + '\', \'' + escapeQuotes(bookingTime) + '\', \'' + escapeQuotes(memberName) + '\', \'' + escapeQuotes(memberPhone) + '\', \'' + escapeQuotes(memberId) + '\', \'' + escapeQuotes(bookingType) + '\', \'' + escapeQuotes(analystName) + '\')" title="編輯">✏️</button>';
                 html += '</div></div>';
             });
             
@@ -1385,7 +1438,7 @@
         var originalDate = '';
         var originalTime = '';
         
-        function openEditModal(id, date, time, name, phone, memberId, bookingType) {
+        function openEditModal(id, date, time, name, phone, memberId, bookingType, analystName) {
             editingBookingId = id;
             originalDate = date;
             originalTime = time;
@@ -1409,6 +1462,7 @@
                 document.getElementById('editBookingMinute').value = '';
             }
             document.getElementById('editBookingType').value = bookingType || '';
+            document.getElementById('editAnalystName').value = analystName || '';
             document.getElementById('editModal').classList.add('active');
         }
         
@@ -1426,12 +1480,13 @@
             var name = document.getElementById('editMemberNameDisplay').textContent;
             var phone = document.getElementById('editMemberPhoneDisplay').textContent;
             var bookingType = document.getElementById('editBookingType').value;
+            var analystName = document.getElementById('editAnalystName').value;
             
             if (!confirm('確定要刪除「' + name + '」的預約嗎？\n\n預約時間：' + originalDate + ' ' + originalTime)) return;
             
             var idToDelete = editingBookingId;
             closeEditModal();
-            await deleteBooking(idToDelete, name, phone, originalDate, originalTime, bookingType);
+            await deleteBooking(idToDelete, name, phone, originalDate, originalTime, bookingType, analystName);
         }
         
         async function saveEdit() {
@@ -1472,7 +1527,8 @@
                         bookingTime: time,
                         memberName: name,
                         memberPhone: phone,
-                        memberId: memberId
+                        memberId: memberId,
+                        analystName: document.getElementById('editAnalystName').value || ''
                     })
                 });
                 
@@ -1494,7 +1550,7 @@
         }
         
         // 刪除預約
-        async function deleteBooking(id, memberName, memberPhone, bookingDate, bookingTime, bookingType) {
+        async function deleteBooking(id, memberName, memberPhone, bookingDate, bookingTime, bookingType, analystName) {
             if (!id) return;
             
             showLoading('刪除中...');
@@ -1511,7 +1567,8 @@
                         memberPhone: memberPhone || '',
                         bookingDate: bookingDate || '',
                         bookingTime: bookingTime || '',
-                        bookingType: bookingType || '' 
+                        bookingType: bookingType || '',
+                        analystName: analystName || ''
                     })
                 });
                 
