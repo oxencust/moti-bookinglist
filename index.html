@@ -1421,11 +1421,13 @@
             if (!editingBookingId) return;
             
             var name = document.getElementById('editMemberNameDisplay').textContent;
+            var phone = document.getElementById('editMemberPhoneDisplay').textContent;
+            
             if (!confirm('確定要刪除「' + name + '」的預約嗎？\n\n預約時間：' + originalDate + ' ' + originalTime)) return;
             
             var idToDelete = editingBookingId;
             closeEditModal();
-            await deleteBooking(idToDelete);
+            await deleteBooking(idToDelete, name, phone, originalDate, originalTime);
         }
         
         async function saveEdit() {
@@ -1500,7 +1502,11 @@
                     body: JSON.stringify({
                         action: 'booking',
                         type: 'delete',
-                        id: id
+                        id: id,
+                        memberName: memberName || '',
+                        memberPhone: memberPhone || '',
+                        bookingDate: bookingDate || '',
+                        bookingTime: bookingTime || ''
                     })
                 });
                 
