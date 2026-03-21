@@ -1452,11 +1452,15 @@
         // 記錄原始日期時間
         var originalDate = '';
         var originalTime = '';
+        var originalEndTime = '';
         
         function openEditModal(id, date, time, name, phone, memberId, bookingType, analystName) {
             editingBookingId = id;
             originalDate = date;
             originalTime = time;
+            var origStartParts = time.split(':');
+            var origEndHour = (parseInt(origStartParts[0]) + 1) % 24;
+            originalEndTime = (origEndHour < 10 ? '0' + origEndHour : origEndHour) + ':' + origStartParts[1];
             // 顯示學員資訊（唯讀）
             document.getElementById('editMemberNameDisplay').textContent = name || '-';
             document.getElementById('editMemberPhoneDisplay').textContent = phone || '-';
@@ -1485,6 +1489,7 @@
             editingBookingId = null;
             originalDate = '';
             originalTime = '';
+            originalEndTime = '';
             document.getElementById('editModal').classList.remove('active');
         }
         
@@ -1532,11 +1537,6 @@
             var startParts = time.split(':');
             var endHour = (parseInt(startParts[0]) + 1) % 24;
             var bookingEndTime = (endHour < 10 ? '0' + endHour : endHour) + ':' + startParts[1];
-
-            // 計算原本的結束時間（+1小時）
-            var originalStartParts = originalTime.split(':');
-            var originalEndHour = parseInt(originalStartParts[0]) + 1;
-            var originalEndTime = (originalEndHour < 10 ? '0' + originalEndHour : originalEndHour) + ':' + originalStartParts[1];
 
             // 計算顯示用日期時間
             var dateObj = new Date(date + 'T' + time + ':00');
