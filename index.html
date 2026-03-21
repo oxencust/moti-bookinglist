@@ -1264,7 +1264,7 @@
 
             // 計算結束時間（+1小時）
             var startParts = time.split(':');
-            var endHour = parseInt(startParts[0]) + 1;
+            var endHour = (parseInt(startParts[0]) + 1) % 24;
             var bookingEndTime = (endHour < 10 ? '0' + endHour : endHour) + ':' + startParts[1];
 
             // 計算顯示用日期時間
@@ -1530,7 +1530,7 @@
 
             // 計算結束時間（+1小時）
             var startParts = time.split(':');
-            var endHour = parseInt(startParts[0]) + 1;
+            var endHour = (parseInt(startParts[0]) + 1) % 24;
             var bookingEndTime = (endHour < 10 ? '0' + endHour : endHour) + ':' + startParts[1];
 
             // 計算原本的結束時間（+1小時）
