@@ -1261,18 +1261,25 @@
                 showToast('請選擇分析師', 'error');
                 return;
             }
-            
+
+            // 計算結束時間（+1小時）
+            var startParts = time.split(':');
+            var endHour = parseInt(startParts[0]) + 1;
+            var bookingEndTime = (endHour < 10 ? '0' + endHour : endHour) + ':' + startParts[1];
+
             showLoading('新增預約中...');
             
             try {
                 var response = await fetch(CONFIG.MAKE_WEBHOOK_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                
                     body: JSON.stringify({
                         action: 'booking',
                         type: 'add',
                         bookingDate: date,
                         bookingTime: time,
+                        bookingEndTime: bookingEndTime,
                         memberName: name,
                         memberPhone: phone,
                         memberId: memberId,
@@ -1512,7 +1519,12 @@
                     '新時間：' + date + ' ' + time;
                 if (!confirm(confirmMsg)) return;
             }
-            
+
+            // 計算結束時間（+1小時）
+            var startParts = time.split(':');
+            var endHour = parseInt(startParts[0]) + 1;
+            var bookingEndTime = (endHour < 10 ? '0' + endHour : endHour) + ':' + startParts[1];
+
             showLoading('儲存中...');
             
             try {
@@ -1525,6 +1537,7 @@
                         id: editingBookingId,
                         bookingDate: date,
                         bookingTime: time,
+                        bookingEndTime: bookingEndTime,
                         originalDate: originalDate,
                         originalTime: originalTime,
                         memberName: name,
