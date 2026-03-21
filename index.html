@@ -1525,6 +1525,11 @@
             var endHour = parseInt(startParts[0]) + 1;
             var bookingEndTime = (endHour < 10 ? '0' + endHour : endHour) + ':' + startParts[1];
 
+            // 計算原本的結束時間（+1小時）
+            var originalStartParts = originalTime.split(':');
+            var originalEndHour = parseInt(originalStartParts[0]) + 1;
+            var originalEndTime = (originalEndHour < 10 ? '0' + originalEndHour : originalEndHour) + ':' + originalStartParts[1];
+
             showLoading('儲存中...');
             
             try {
@@ -1540,6 +1545,7 @@
                         bookingEndTime: bookingEndTime,
                         originalDate: originalDate,
                         originalTime: originalTime,
+                        originalEndTime: originalEndTime,
                         memberName: name,
                         memberPhone: phone,
                         memberId: memberId,
