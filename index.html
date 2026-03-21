@@ -1268,10 +1268,8 @@
             var bookingEndTime = (endHour < 10 ? '0' + endHour : endHour) + ':' + startParts[1];
 
             // 計算顯示用日期時間
-            var dateObj = new Date(date + 'T' + time + ':00');
-            var startDatetime = dateObj.getFullYear() + '年' + (dateObj.getMonth() + 1) + '月' + dateObj.getDate() + '日 ' + time;
-            var endDateObj = new Date(date + 'T' + bookingEndTime + ':00');
-            var endDatetime = endDateObj.getFullYear() + '年' + (endDateObj.getMonth() + 1) + '月' + endDateObj.getDate() + '日 ' + bookingEndTime;
+            var startDatetime = date + ' ' + time;
+            var endDatetime = date + ' ' + bookingEndTime;
 
             showLoading('新增預約中...');
             
@@ -1539,10 +1537,8 @@
             var bookingEndTime = (endHour < 10 ? '0' + endHour : endHour) + ':' + startParts[1];
 
             // 計算顯示用日期時間
-            var dateObj = new Date(date + 'T' + time + ':00');
-            var startDatetime = dateObj.getFullYear() + '年' + (dateObj.getMonth() + 1) + '月' + dateObj.getDate() + '日 ' + time;
-            var endDateObj = new Date(date + 'T' + bookingEndTime + ':00');
-            var endDatetime = endDateObj.getFullYear() + '年' + (endDateObj.getMonth() + 1) + '月' + endDateObj.getDate() + '日 ' + bookingEndTime;
+            var startDatetime = date + ' ' + time;
+            var endDatetime = date + ' ' + bookingEndTime;
 
             showLoading('儲存中...');
             
