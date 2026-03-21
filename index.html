@@ -1061,7 +1061,12 @@
             <input type="hidden" id="editMemberPhone">
             <input type="hidden" id="editMemberId">
             <input type="hidden" id="editBookingType">
-            <input type="hidden" id="editAnalystName">
+            <div class="form-group">
+    <label class="form-label">分析師<span class="required">*</span></label>
+    <select class="form-input" id="editAnalystName">
+        <option value="">載入中...</option>
+    </select>
+</div>
             
             <div class="modal-actions">
                 <button class="btn btn-danger" onclick="deleteFromEdit()">🗑️ 刪除預約</button>
@@ -1326,6 +1331,7 @@
         // 載入分析師列表
         async function loadAnalysts() {
             var select = document.getElementById('analystName');
+            var editSelect = document.getElementById('editAnalystName');
             try {
                 var response = await fetch(CONFIG.MAKE_WEBHOOK_URL, {
                     method: 'POST',
@@ -1347,12 +1353,15 @@
                         }
                     });
                     select.innerHTML = html;
+                    editSelect.innerHTML = html;
                 } else {
                     select.innerHTML = '<option value="">載入失敗，請重新整理</option>';
+                    editSelect.innerHTML = '<option value="">載入失敗，請重新整理</option>';
                 }
             } catch (error) {
                 console.error('載入分析師失敗:', error);
                 select.innerHTML = '<option value="">載入失敗，請重新整理</option>';
+                editSelect.innerHTML = '<option value="">載入失敗，請重新整理</option>';
             }
         }
         
@@ -1435,6 +1444,9 @@
                     html += '<span>🏷️ ' + escapeHtml(memberId) + '</span>';
                 }
                 html += '<span>📱 ' + (memberPhone ? escapeHtml(memberPhone) : '-') + '</span>';
+                if (analystName) {
+                    html += '<span>🔬 ' + escapeHtml(analystName) + '</span>';
+                }
                 html += '</div></div>';
                 html += '<div class="booking-actions">';
                 html += '<button class="btn-icon btn-edit" onclick="openEditModal(' + id + ', \'' + escapeQuotes(bookingDate) + '\', \'' + escapeQuotes(bookingTime) + '\', \'' + escapeQuotes(memberName) + '\', \'' + escapeQuotes(memberPhone) + '\', \'' + escapeQuotes(memberId) + '\', \'' + escapeQuotes(bookingType) + '\', \'' + escapeQuotes(analystName) + '\')" title="編輯">✏️</button>';
@@ -1479,7 +1491,16 @@
                 document.getElementById('editBookingMinute').value = '';
             }
             document.getElementById('editBookingType').value = bookingType || '';
-            document.getElementById('editAnalystName').value = analystName || '';
+            // 等分析師列表載入完成後設定選中值
+var editSelect = document.getElementById('editAnalystName');
+if (editSelect.options.length <= 1) {
+    // 還在載入中，稍等後再設定
+    setTimeout(function() {
+        editSelect.value = analystName || '';
+    }, 500);
+} else {
+    editSelect.value = analystName || '';
+}
             document.getElementById('editModal').classList.add('active');
         }
         
